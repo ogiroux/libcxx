@@ -3214,7 +3214,13 @@ struct __libcpp_is_nothrow_destructible<false, _Tp>
 
 template <class _Tp>
 struct __libcpp_is_nothrow_destructible<true, _Tp>
-    : public integral_constant<bool, noexcept(_VSTD::declval<_Tp>().~_Tp()) >
+    : public integral_constant<bool, 
+#ifdef _MSC_VER
+    __is_nothrow_destructible(_Tp)
+#else
+    noexcept(_VSTD::declval<_Tp>().~_Tp()) 
+#endif
+    >
 {
 };
 
